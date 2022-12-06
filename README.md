@@ -57,3 +57,10 @@ distância: 1000 (fixo)
 volume: 1
 densidade: 40
 preço: R$400,00 (1000 * 1 * (40/100))
+
+Parte 3
+
+1 - Implementar o save da order no banco de dados (Checkout) OK
+2 - Implementar a geração do código do pedido (AAAAPPPPPPPP) OK
+3 - Implementar o caso de uso simular frete OK
+4 - Implementar o caso de uso validar cupom de desconto

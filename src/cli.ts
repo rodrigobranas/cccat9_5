@@ -1,6 +1,8 @@
-import Checkout from "./Checkout";
-import CouponDataDatabase from "./CouponDataDatabase";
-import ProductDataDatabase from "./ProductDataDatabase";
+import Checkout from "./application/Checkout";
+import CouponDataDatabase from "./infra/data/CouponDataDatabase";
+import OrderDataDatabase from "./infra/data/OrderDataDatabase";
+import ProductDataDatabase from "./infra/data/ProductDataDatabase";
+import PgPromiseConnection from "./infra/database/PgPromiseConnection";
 
 const input: any = {
 	items: []
@@ -19,9 +21,11 @@ process.stdin.on("data", async function (chunk) {
 	}
 	if (command.startsWith("checkout")) {
 		try {
-			const productData = new ProductDataDatabase();
-			const couponData = new CouponDataDatabase();
-			const checkout = new Checkout(productData, couponData);
+			const connection = new PgPromiseConnection();
+			const productData = new ProductDataDatabase(connection);
+			const couponData = new CouponDataDatabase(connection);
+			const orderData = new OrderDataDatabase(connection);
+			const checkout = new Checkout(productData, couponData, orderData);
 			const output = await checkout.execute(input);
 			console.log(output);
 		} catch (error: any) {

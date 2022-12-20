@@ -4,13 +4,17 @@ import GetOrderByCpf from "../../src/application/GetOrderByCpf";
 import OrderDataDatabase from "../../src/infra/data/OrderDataDatabase";
 import ProductDataDatabase from "../../src/infra/data/ProductDataDatabase";
 import PgPromiseConnection from "../../src/infra/database/PgPromiseConnection";
+import FreightGatewayHttp from "../../src/infra/gateway/FreightGatewayHttp";
+import CatalogGatewayHttp from "../../src/infra/gateway/CatalogGatewayHttp";
 
 test("Deve consultar um pedido", async function () {
 	const connection = new PgPromiseConnection();
 	const productData = new ProductDataDatabase(connection);
 	const couponData = new CouponDataDatabase(connection);
 	const orderData = new OrderDataDatabase(connection);
-	const checkout = new Checkout(productData, couponData, orderData);
+	const freightGateway = new FreightGatewayHttp();
+	const catalogGateway = new CatalogGatewayHttp();
+	const checkout = new Checkout(catalogGateway, couponData, orderData, freightGateway);
 	const input = {
 		cpf: "987.654.321-00",
 		items: [
@@ -22,7 +26,7 @@ test("Deve consultar um pedido", async function () {
 	await checkout.execute(input);
 	const getOrderByCpf = new GetOrderByCpf(orderData);
 	const output = await getOrderByCpf.execute("987.654.321-00");
-	expect(output.total).toBe(6350);
+	expect(output.total).toBe(6370);
 	await connection.close();
 });
 

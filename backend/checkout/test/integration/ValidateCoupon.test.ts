@@ -9,4 +9,5 @@ test("Deve validar um cupom de desconto", async function () {
 	const output = await validateCoupon.execute("VALE20", 1000);
 	expect(output.isExpired).toBeFalsy();
 	expect(output.discount).toBe(200);
+	await connection.close();
 });

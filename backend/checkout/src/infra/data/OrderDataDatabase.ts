@@ -21,4 +21,9 @@ export default class OrderDataDatabase implements OrderData {
 		const [options] = await this.connection.query("select count(*)::integer as count from cccat9.order", []);
 		return options.count;
 	}
+
+	async clean(): Promise<void> {
+		await this.connection.query("delete from cccat9.item", []);
+		await this.connection.query("delete from cccat9.order", []);
+	}
 }

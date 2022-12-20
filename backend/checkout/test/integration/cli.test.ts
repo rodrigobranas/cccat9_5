@@ -7,13 +7,17 @@ import ProductDataDatabase from "../../src/infra/data/ProductDataDatabase";
 import PgPromiseConnection from "../../src/infra/database/PgPromiseConnection";
 import sinon from "sinon";
 import CLIHandlerMemory from "../../src/infra/cli/CLIHandlerMemory";
+import FreightGatewayHttp from "../../src/infra/gateway/FreightGatewayHttp";
+import CatalogGatewayHttp from "../../src/infra/gateway/CatalogGatewayHttp";
 
 test("Deve testar o cli", async function () {
 	const connection = new PgPromiseConnection();
 	const productData = new ProductDataDatabase(connection);
 	const couponData = new CouponDataDatabase(connection);
 	const orderData = new OrderDataDatabase(connection);
-	const checkout = new Checkout(productData, couponData, orderData);
+	const freightGateway = new FreightGatewayHttp();
+	const catalogGateway = new CatalogGatewayHttp();
+	const checkout = new Checkout(catalogGateway, couponData, orderData, freightGateway);
 	const checkoutSpy = sinon.spy(checkout, "execute");
 	const handler = new CLIHandlerMemory();
 	new CLIController(handler, checkout);
@@ -25,4 +29,5 @@ test("Deve testar o cli", async function () {
 	expect(output.code).toBe("202200000001");
 	expect(output.total).toBe(1030);
 	checkoutSpy.restore();
+	await connection.close();
 });

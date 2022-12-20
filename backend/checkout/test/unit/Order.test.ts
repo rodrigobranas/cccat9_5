@@ -16,7 +16,8 @@ test("Deve criar um pedido com 3 itens", function () {
 	order.addItem(new Product(1, "A", 1000, 100, 30, 10, 3), 1);
 	order.addItem(new Product(2, "B", 5000, 50, 50, 50, 22), 1);
 	order.addItem(new Product(3, "C", 30, 10, 10, 10, 1), 3);
-	expect(order.getTotal()).toBe(6350);
+	order.freight = 280;
+	expect(order.getTotal()).toBe(6370);
 });
 
 test("Deve criar um pedido com 3 itens com cupom de desconto", function () {
@@ -25,7 +26,8 @@ test("Deve criar um pedido com 3 itens com cupom de desconto", function () {
 	order.addItem(new Product(2, "B", 5000, 50, 50, 50, 22), 1);
 	order.addItem(new Product(3, "C", 30, 10, 10, 10, 1), 3);
 	order.addCoupon(new Coupon("VALE20", 20, new Date("2023-12-10T10:00:00")));
-	expect(order.getTotal()).toBe(5132);
+	order.freight = 280;
+	expect(order.getTotal()).toBe(5152);
 });
 
 test("Não deve criar um pedido com item com quantidade negativa", function () {
